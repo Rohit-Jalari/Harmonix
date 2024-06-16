@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "wavesurfer.js": "^7.7.15"
+  },
+  "devDependencies": {
+    "webpack": "^5.92.0",
+    "webpack-cli": "^5.1.4"
+  }
+}

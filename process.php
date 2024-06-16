@@ -1,64 +1,76 @@
 <?php
 
 function processAudio($audioFilePath) {
-    
-    $pythonScript = 'python process_audio.py'; 
+    $url = 'http://localhost:5000/process_audioNMF'; // Adjust URL as per your Flask server
+    $data = array('audioFilePath' => $audioFilePath); // Data to send in the POST request
 
-    // Validation
-    if (!file_exists($audioFilePath) || !is_file($audioFilePath)) {
-        return "Error: Invalid file.";
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // Set a reasonable timeout for the cURL request
+    // curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Timeout in seconds
+
+    $response = curl_exec($ch);
+
+    // Check for cURL errors
+    if(curl_errno($ch)) {
+        $error_message = curl_error($ch);
+        curl_close($ch);
+        return json_encode(array('error' => 'cURL error: ' . $error_message));
     }
 
-    // Escape any shell arguments for security
-    $escapedFilePath = escapeshellarg($audioFilePath);
+    $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
 
-    // Execution and captuure 'output' and 'errors'
-    exec("$pythonScript $escapedFilePath 2>&1", $output, $return_var);
-
-    // Check for errors
-    if ($return_var !== 0) {
-        error_log("Error executing Python script: " . implode("\n", $output));
-        return "Error executing Python script.";
+    // Check HTTP status code for error handling
+    if ($http_status >= 400) {
+        return json_encode(array('error' => 'HTTP error: ' . $http_status));
     }
-    //outputs the processed audio data as a base64 encoded string
-    return $output[0];
+
+    return $response;
 }
-
 
 if(isset($_FILES['audioFile'])) {
     // Directory where uploaded files will be saved
     $target_dir = "uploads/";
-    // Constructing the path to save the uploaded file
-    // $target_file = $target_dir . basename($_FILES["audioFile"]["name"]);
 
-    // // Check if the file is a valid audio file
-    // $audioFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-    // if($audioFileType != "wav" && $audioFileType != "mp3") {
-    //     echo json_encode(array('error' => 'Only WAV and MP3 files are allowed.'));
-    //     exit;
-    // }
+    // Validate file type and size (example for MP3 file)
+    $allowed_types = array('audio/mpeg', 'audio/mp3');
+    $max_file_size = 10 * 1024 * 1024; // 10 MB
 
-    // Check file size (max 50MB)
-    if ($_FILES["audioFile"]["size"] > 50000000) {
-        echo json_encode(array('error' => 'File size exceeds maximum limit of 50MB.'));
+    // Check file type
+    if (!in_array($_FILES['audioFile']['type'], $allowed_types)) {
+        echo json_encode(array('error' => 'Invalid file type. Only MP3 files are allowed.'));
         exit;
     }
 
-    // Generate a unique filename to avoid collisions
-    // $uniqueFileName = $target_dir . uniqid('audio_', true) . '.' . $audioFileType;
+    // Check file size
+    if ($_FILES['audioFile']['size'] > $max_file_size) {
+        echo json_encode(array('error' => 'File size exceeds maximum limit of 10 MB.'));
+        exit;
+    }
+
+    // Generate a unique filename for the uploaded file
     $uniqueFileName = $target_dir . uniqid('audio_', true) . '.mp3';
 
     // Attempt to move the uploaded file to the specified location
     if (move_uploaded_file($_FILES["audioFile"]["tmp_name"], $uniqueFileName)) {
-    
+        // Process the uploaded file
         $result = processAudio($uniqueFileName);
         
         // Delete the uploaded file after processing
         unlink($uniqueFileName);
 
         // Return processed data as JSON response
-        echo json_encode(array('results' => $result));
+        if ($result !== false) {
+            echo json_encode(array('result' => $result));
+        } else {
+            echo json_encode(array('error' => 'Error processing file.'));
+        }
     } else {
         echo json_encode(array('error' => 'Error uploading file.'));
     }
 }
+?>

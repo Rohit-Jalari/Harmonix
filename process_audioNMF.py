@@ -1,10 +1,11 @@
-from flask import Flask, request, jsonify
-import numpy as np
-import librosa
-from sklearn.decomposition import NMF
+# from flask import Flask, request, jsonify
+from flask import Flask, jsonify
+# import numpy as np
+# import librosa
+# from sklearn.decomposition import NMF
 
 app = Flask(__name__)
-
+"""
 def nmf_separation(audio_file):
     try:
         # Load the audio file
@@ -32,13 +33,14 @@ def nmf_separation(audio_file):
 
     except Exception as e:
         return str(e)
+"""
 
-@app.route('/process_audio', methods=['POST'])
-def process_audio():
-    if 'audio_file' not in request.files:
-        return jsonify({'error': 'No audio file uploaded'}), 400
+@app.route('/process_audioNMF', methods=['POST'])
+def process_audioNMF():
+    # if 'audio_file' not in request.files:
+    #     return jsonify({'error': 'No audio file uploaded'}), 400
     
-    return jsonify({'backing_track': 'Hello'})
+    return jsonify({'backing_track': "Trial"})
 
     # audio_file = request.files['audio_file']
     # audio_data = audio_file.read()
@@ -50,4 +52,4 @@ def process_audio():
     # return jsonify({'backing_track': backing_track_bytes.decode('latin-1')})
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
