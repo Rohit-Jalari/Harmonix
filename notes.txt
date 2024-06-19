@@ -1,0 +1,6 @@
+to build webpack:
+npx webpack --config webpack.config.js
+
+git clone https://github.com/NextAudioGen/ultimatevocalremover_api.git
+cd ultimatevocalremover_api
+pip install .
