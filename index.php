@@ -5,20 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audio Processing</title>
-    <script src="assets/libs/jquery.js"></script>
+    <script src="assets/js/jquery.min.js"></script>
     <script src="dist/bundle.js" type="module"></script>
     <!-- <script src="https://unpkg.com/wavesurfer.js"></script> -->
 
     <script>
         $(document).ready(function () {
-            // Function to handle form submission
+            // process button is enabled after uploading file
+            $('#file').change(function () {
+                var fileSelected = $(this).val() !== "";
+                $('#submitBtn').prop('disabled', !fileSelected);
+            });
+
             $('form').submit(function (event) {
-                event.preventDefault(); // Prevent the default form submission
+                event.preventDefault();
 
                 var formData = new FormData($(this)[0]);
+                $("#file").val(""); // Clear file input after submission
+                $('#submitBtn').prop('disabled', true) // disables process button after clicking it
+                $("#audioPlayer").empty(); // Clear audio player div
                 console.log(formData);
                 $.ajax({
-                    url: 'process.php', // script that handles form submission
+                    url: 'process.php',
                     type: 'POST',
                     data: formData,
                     async: true,
@@ -26,14 +34,20 @@
                     contentType: false,
                     processData: false,
                     success: function (response) {
-                        var data = JSON.parse(JSON.parse(response).result).outputPath;
+                        var data = JSON.parse(response).result;
+                        var outputPath = JSON.parse(data).outputPath;
+                        var audioID = JSON.parse(data).audioID;
                         console.log(data);
+                        console.log('File Path = ' + outputPath);
+                        console.log('Audio ID = ' + audioID);
+                        let div = $(`<div id="audioID">${audioID}</div>`);
+                        $('#audioPlayer').append(div);
                         // Create the audio element
-                        var audioPlayer = $('<audio controls></audio>');    
-                        // Set the source of the audio element
-                        audioPlayer.attr('src', data);    
+                        // var audioPlayer = $('<audio controls></audio>');
+                        // Set the source as 'outputPath' of the audio element
+                        // audioPlayer.attr('src', outputPath);    
                         // Append the audio player to the div with id 'audioPlayer'
-                        $('#audioPlayer').append(audioPlayer);
+                        // $('#audioPlayer').append(audioPlayer);
                     },
                     error: function () {
                         alert('Error processing file.');
@@ -47,8 +61,8 @@
 <body>
     <h1>Upload Audio File</h1>
     <form id="uploadForm" action="process.php" method="post" enctype="multipart/form-data">
-        <input type="file" name="audioFile" accept=".wav, .mp3">
-        <button type="submit" name="submit">Process</button>
+        <input type="file" name="audioFile" accept=".wav, .mp3" id="file">
+        <button type="submit" name="submit" id="submitBtn" disabled>Process</button>
     </form>
 
     <div class="audio-wrapper">
@@ -64,6 +78,5 @@
 
     <!-- Other scripts and closing tags -->
 </body>
-
 
 </html>

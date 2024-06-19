@@ -17,9 +17,9 @@ def separate_audio():
         separator = Separator('spleeter:2stems')
 
         #filename in upload directory
-        filename = secure_filename(audio_file.filename).replace('uploads_', 'uploads/')
+        
+        filename = secure_filename(audio_file.filename).replace('uploads_audioID', 'uploads/audioID=')
         file_extension = os.path.splitext(filename)[1].replace('.','')
-        print(file_extension)
 
         # Separate the audio file        
         separator.separate_to_file(filename, 'outputs', codec=file_extension)
@@ -31,7 +31,7 @@ def separate_audio():
         # Construct the trackFilePath
         trackFilePath = os.path.join(target_dir, directory_name, f'accompaniment.{file_extension}')
 
-        return jsonify({'status': 1, 'outputPath': trackFilePath})
+        return jsonify({'status': 1, 'outputPath': trackFilePath, 'audioID': directory_name})
 
     except Exception as e:
         return jsonify({'error': str(e)})

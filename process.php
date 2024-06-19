@@ -6,6 +6,7 @@ function processAudio($audioFilePath) {
     $postData = [
         'audio_file' => new CURLFile($audioFilePath, 'audio/mp3')
     ];
+    // return $audioFilePath;
     // $postData = json_encode(['audioFilePath' => $audioFilePath]);
 
     $ch = curl_init($url);
@@ -57,7 +58,7 @@ if(isset($_FILES['audioFile'])) {
     }
 
     // Generate a unique filename for the uploaded file
-    $uniqueFileName = $target_dir . uniqid('audio_', true) . '.mp3';
+    $uniqueFileName = $target_dir . uniqid('audioID=', true) . '.mp3';
 
     // Attempt to move the uploaded file to the specified location
     if (move_uploaded_file($_FILES["audioFile"]["tmp_name"], $uniqueFileName)) {
