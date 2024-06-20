@@ -1,0 +1,43 @@
+var state = "<?php Print($state); ?>";  //php value to js variable
+
+
+
+//sidebar-background-color change
+.bg-menu-theme {
+    background-color: #1d1d1d !important;
+} = theme-default.css.645
+
+//sidebar-item-color(toggled)
+.bg-menu-theme .menu-item.open:not(.menu-item-closing) > .menu-toggle, .bg-menu-theme .menu-item.active > .menu-link {
+    color: #2efb00;
+} = theme-default.css
+
+//sidebar-item-list
+.bg-menu-theme .menu-link, .bg-menu-theme .menu-horizontal-prev, .bg-menu-theme .menu-horizontal-next {
+    color: #ffffff;
+}
+
+//sidebar-item-active
+.bg-menu-theme .menu-inner > .menu-item.active > .menu-link {
+    color: #00ff1d;
+    background-color: #8d08ff4a !important;
+}
+
+//menu-header
+.bg-menu-theme .menu-header {
+    color: #00ffbdd4;
+}
+
+//focus
+.bg-menu-theme .menu-link:hover, .bg-menu-theme .menu-link:focus, .bg-menu-theme .menu-horizontal-prev:hover, .bg-menu-theme .menu-horizontal-prev:focus, .bg-menu-theme .menu-horizontal-next:hover, .bg-menu-theme .menu-horizontal-next:focus {
+    color: #000000;
+}
+
+//login-page
+.authentication-wrapper.authentication-basic .authentication-inner{
+	//
+}
+//card
+.card{
+	//core css
+}
