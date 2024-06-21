@@ -38,13 +38,13 @@ function processAudio($audioFilePath) {
 }
 
 if(isset($_FILES['audioFile'])) {
-    echo json_encode(array('result' => 'working'));
-    return;
+    // echo json_encode(array('result' => 'working'));
+    // return;
     // Directory where uploaded files will be saved
     $target_dir = "../../uploads/";
 
     // Validate file type and size (example for MP3 file)
-    $allowed_types = array('audio/mpeg', 'audio/mp3');
+    $allowed_types = array('audio/mpeg', 'audio/mp3', 'audio/wav');
     $max_file_size = 10 * 1024 * 1024; // 10 MB
 
     // Check file type

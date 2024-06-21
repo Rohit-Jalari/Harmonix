@@ -22,40 +22,6 @@
 
             $('form').submit(function(event) {
                 event.preventDefault();
-
-                var formData = new FormData($(this)[0]);
-                $("#file").val(""); // Clear file input after submission
-                $('#submitBtn').prop('disabled', true) // disables process button after clicking it
-                $("#audioPlayer").empty(); // Clear audio player div
-                console.log(formData);
-                $.ajax({
-                    url: 'process/process.php',
-                    type: 'POST',
-                    data: formData,
-                    async: true,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        // var data = JSON.parse(response);
-                        // var outputPath = '../' + JSON.parse(data).outputPath;
-                        // var audioID = JSON.parse(data).audioID;
-                        console.log(response);
-                        // console.log('File Path = ' + outputPath);
-                        // console.log('Audio ID = ' + audioID);
-                        // let div = $(`<div id="audioID">${audioID}</div>`);
-                        // $('#audioPlayer').append(div);
-                        // // Create the audio element
-                        // var audioPlayer = $('<audio controls></audio>');
-                        // // Set the source as 'outputPath' of the audio element
-                        // audioPlayer.attr('src', outputPath);
-                        // // Append the audio player to the div with id 'audioPlayer'
-                        // $('#audioPlayer').append(audioPlayer);
-                    },
-                    error: function() {
-                        alert('Error processing file.');
-                    }
-                });
             });
         });
     </script>
@@ -140,11 +106,14 @@
                                     </div>
                                     <!-- Container for Wavesurfer -->
                                     <div id="spectogram" style="width: 100%; height: 200px;">
-                                        s
-                                    </div>
-                                    <div id="audioPlayer"></div>
-                                </div>
 
+                                    </div>
+                                    <div class="d-flex justify-content-center align-item-center" style="width: 100%;">
+                                        <button id="separateBtn">
+                                            Separate
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -162,8 +131,23 @@
 <script src="assets/vendor/libs/wavesurfer/plugins/hover.min.js"></script>
 <script src="assets/vendor/libs/wavesurfer/plugins/regions.min.js"></script>
 <script>
+    var wavesurfer;
     // Disable Dropzone auto-discovery
     Dropzone.autoDiscover = false;
+
+    function blockUI(containerID, message) {
+        $(containerID).block({
+            message: `<div class="d-flex justify-content-center"><p class="me-2 mb-0" style="color:black;">${message}</p> <div class="sk-wave sk-primary m-0"><div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div></div> </div>`,
+            css: {
+                backgroundColor: "transparent",
+                border: "0"
+            },
+            overlayCSS: {
+                backgroundColor: "white",
+                opacity: 0.8
+            }
+        });
+    }
 
     // Initialize Dropzone
     var myDropzone = new Dropzone("#dropzone-basic", {
@@ -192,18 +176,7 @@
     // document.getElementById("submitButton").addEventListener("click", function() {
     $("#submitButton").on("click", function() {
         console.log('start');
-        $("#spectogram").block({
-            message: '<div class="d-flex justify-content-center"><p class="me-2 mb-0">Please wait...</p> <div class="sk-wave sk-primary m-0"><div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div></div> </div>',
-            timeout: 7000,
-            css: {
-                backgroundColor: "transparent",
-                border: "0"
-            },
-            overlayCSS: {
-                backgroundColor: "white",
-                opacity: 0.8
-            }
-        });
+        blockUI('#spectogram', 'Please Wait.....')
         console.log('end');
 
         if (myDropzone.files.length > 0) {
@@ -216,11 +189,14 @@
 
                 // Clear any existing spectogram
                 document.getElementById("spectogram").innerHTML = "";
-                var wavesurfer = WaveSurfer.create({
+
+                wavesurfer = WaveSurfer.create({
                     container: '#spectogram',
                     waveColor: 'violet',
                     progressColor: 'purple',
                     height: 128,
+                    mediaControls: true,
+                    autoplay: false,
                     plugins: [
                         WaveSurfer.Hover.create({
                             lineColor: '#ff0000',
@@ -231,9 +207,54 @@
                         })
                     ]
                 });
+                /** When audio starts loading */
+                wavesurfer.on('load', (url) => {
+                    blockUI('#spectogram', 'Initializing Loading .....');
+                });
 
-                // Load the audio data into WaveSurfer
-                wavesurfer.load(audioUrl);
+                /** During audio loading */
+                wavesurfer.on('loading', (percent) => {
+                    blockUI('#spectogram', 'Loading Audio .....');
+                });
+
+                /** When the audio has been decoded */
+                wavesurfer.on('decode', (duration) => {
+                    $('#spectogram').unblock();
+                });
+
+                /** When the audio is both decoded and can play */
+                wavesurfer.on('ready', (duration) => {
+                    $('#spectogram').unblock();
+                });
+
+                /** When visible waveform is drawn */
+                wavesurfer.on('redrawcomplete', () => {
+                    blockUI('#spectogram', 'Drawing Waveform.....');
+                });
+                /** When all audio channel chunks of the waveform have drawn */
+                wavesurfer.on('redrawcomplete', () => {
+                    $('#spectogram').unblock();
+                })
+
+                // Create a new audio element to get duration
+                var audio = new Audio();
+                audio.src = audioUrl;
+
+                // Wait for audio metadata to be loaded to get duration
+                audio.addEventListener('loadedmetadata', function() {
+                    var duration = audio.duration; // Get audio duration in seconds
+
+                    var plugins = [
+                        WaveSurfer.Hover.create({
+                            lineColor: '#ff0000',
+                            lineWidth: 2,
+                            labelBackground: '#555',
+                            labelColor: '#fff',
+                            labelSize: '11px',
+                        })
+                    ];
+                    wavesurfer.load(audioUrl);
+                });
             };
 
             reader.readAsDataURL(file);
@@ -248,9 +269,50 @@
         var confirmed = confirm('Do you want to discard progress?');
 
         if (confirmed) {
+            myDropzone.removeFile(myDropzone.files[0]);
             $('#spectogramContainer').css('display', 'none');
             $('#uploadBody').css('display', 'block');
+            $('#separateBtn').prop('disabled', false) // disables process button after clicking it
         }
+    });
+    $('#separateBtn').on('click', function() {
+
+        if (wavesurfer.isPlaying()) {
+            wavesurfer.pause();
+        }
+        blockUI('#spectogram', 'Separating Vocal.....');
+        // var formData = new FormData(myDropzone.files[0]);
+
+        var file = myDropzone.files[0];
+        var formData = new FormData();
+
+        formData.append('audioFile', file);
+
+        $('#separateBtn').prop('disabled', true) // disables process button after clicking it
+        console.log(formData);
+        $.ajax({
+            url: 'process/process.php',
+            type: 'POST',
+            data: formData,
+            async: true,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                console.log(response);
+                var data = JSON.parse(response).result;
+                var outputPath = '../' + JSON.parse(data).outputPath;
+                var audioID = JSON.parse(data).audioID;
+                console.log('File Path = ' + outputPath);
+                console.log('Audio ID = ' + audioID);
+                wavesurfer.empty();
+                wavesurfer.load(outputPath);
+                $('#spectogram').unblock();
+            },
+            error: function() {
+                alert('Error processing file.');
+            }
+        });
     })
 </script>
 
