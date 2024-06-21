@@ -16,7 +16,7 @@ rel="stylesheet"
 <link rel="stylesheet" href="assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
 <!-- Vendors CSS -->
 <link rel="stylesheet" href="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
-<link rel="stylesheet" href="assets/vendor/libs/apex-charts/apex-charts.css" />
+<link rel="stylesheet" href="assets/vendor/libs/spinkit/spinkit.css">
 <!-- Page CSS -->
 <!-- Helpers -->
 <script src="assets/vendor/js/helpers.js"></script>

@@ -10,9 +10,8 @@
     <link rel="stylesheet" href="assets/vendor/css/rtl/core-dark.css">
     <link rel="stylesheet" href="assets/vendor/libs/dropzone/dropzone.css">
 
-
     <script src="assets/vendor/libs/jquery/jquery.js"></script>
-    <script src="../dist/bundle.js" type="module"></script>
+    <!-- <script src="../dist/bundle.js" type="module"></script> -->
     <script>
         $(document).ready(function() {
             // process button is enabled after uploading file
@@ -122,7 +121,7 @@
 
                         <div class="row d-flex justify-content-center aligh-items-center">
                             <div class="col-10">
-                                <div class="card">
+                                <div id="uploadBody" class="card" style="display: block;">
                                     <div>
                                         Separate Vocals
                                     </div>
@@ -131,34 +130,23 @@
                                             Drop audio files here or click to upload
                                         </div>
                                     </form>
-                                    <button type="button" id="submitBtn">Add Audio Player</button>
+                                    <div class="d-flex justify-content-center mt-3">
+                                        <button class="primary" id="submitButton">Process</button>
+                                    </div>
+                                </div>
+                                <div class="card" id="spectogramContainer" style="display: none;">
+                                    <div>
+                                        <button class="btn-danger mb-3" id="discardButton">Discard</button>
+                                    </div>
                                     <!-- Container for Wavesurfer -->
-                                    <div id="waveform" style="width: 100%; height: 200px; display: none;"></div>
+                                    <div id="spectogram" style="width: 100%; height: 200px;">
+                                        s
+                                    </div>
                                     <div id="audioPlayer"></div>
-
                                 </div>
 
                             </div>
                         </div>
-
-
-
-                        <h1>Upload Audio File</h1>
-                        <!-- Old Upload Form -->
-                        <!-- <form id="uploadForm" action="" method="post" enctype="multipart/form-data">
-                            <input type="file" name="audioFile" accept=".wav, .mp3" id="file">
-                            <button type="submit" name="submit" id="submitBtn" disabled>Process</button>
-                        </form> -->
-
-                        <div class="audio-wrapper">
-                            <div id="audioControls">
-                                <!-- Controls for trimming -->
-                                <button id="trimButton">Trim to 30 seconds</button>
-                                <button id="submitButton" style="display: none;">Submit</button>
-                            </div>
-
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -170,44 +158,100 @@
 </body>
 <?php include('includes/script.php') ?>
 <script src="assets/vendor/libs/dropzone/dropzone.js"></script>
+<script src="assets/vendor/libs/wavesurfer/wavesurfer.min.js"></script>
+<script src="assets/vendor/libs/wavesurfer/plugins/hover.min.js"></script>
+<script src="assets/vendor/libs/wavesurfer/plugins/regions.min.js"></script>
 <script>
-    Dropzone.options.dropzoneBasic = {
+    // Disable Dropzone auto-discovery
+    Dropzone.autoDiscover = false;
+
+    // Initialize Dropzone
+    var myDropzone = new Dropzone("#dropzone-basic", {
         autoProcessQueue: false, // Prevent automatic uploads
         maxFiles: 1, // Allow only one file
         acceptedFiles: 'audio/*',
-        addRemoveLinks: true, // Allow file removal
-        init: function() {
-            var myDropzone = this;
+        addRemoveLinks: true // Allow file removal
+    });
 
-            // Listen for the 'addedfile' event to store the uploaded file information
-            myDropzone.on("addedfile", function(file) {
-                // Store the file in the Dropzone instance for later processing
-                myDropzone.files.push(file);
-            });
-
-            // Add an event listener to the button to create the audio player
-            document.getElementById("submitBtn").addEventListener("click", function() {
-                if (myDropzone.files.length > 0) {
-                    // Assume the first file is the one we want to process
-                    var file = myDropzone.files[0];
-                    var reader = new FileReader();
-
-                    reader.onload = function(event) {
-                        var audioUrl = event.target.result;
-                        var audioContainer = document.getElementById("audioContainer");
-                        var audioElement = document.createElement("audio");
-                        audioElement.controls = true;
-                        audioElement.src = audioUrl;
-                        audioContainer.appendChild(audioElement);
-                    };
-
-                    reader.readAsDataURL(file);
-                } else {
-                    alert("Please upload an audio file first.");
-                }
-            });
+    // Listen for the 'addedfile' event to store the uploaded file information
+    myDropzone.on("addedfile", function(file) {
+        // Remove any previously added file
+        if (myDropzone.files.length > 1) {
+            myDropzone.removeFile(myDropzone.files[0]);
         }
-    };
+        $('#spectogramContainer').css('display', 'none');
+    });
+
+    // Listen for the 'removedfile' event to clear the spectogram container
+    myDropzone.on("removedfile", function(file) {
+        document.getElementById("spectogram").innerHTML = "";
+        $('#spectogramContainer').css('display', 'none');
+    });
+
+    // Add an event listener to the button to create the spectogram
+    // document.getElementById("submitButton").addEventListener("click", function() {
+    $("#submitButton").on("click", function() {
+        console.log('start');
+        $("#spectogram").block({
+            message: '<div class="d-flex justify-content-center"><p class="me-2 mb-0">Please wait...</p> <div class="sk-wave sk-primary m-0"><div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div></div> </div>',
+            timeout: 7000,
+            css: {
+                backgroundColor: "transparent",
+                border: "0"
+            },
+            overlayCSS: {
+                backgroundColor: "white",
+                opacity: 0.8
+            }
+        });
+        console.log('end');
+
+        if (myDropzone.files.length > 0) {
+            // Assume the first file is the one we want to process
+            var file = myDropzone.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function(event) {
+                var audioUrl = event.target.result;
+
+                // Clear any existing spectogram
+                document.getElementById("spectogram").innerHTML = "";
+                var wavesurfer = WaveSurfer.create({
+                    container: '#spectogram',
+                    waveColor: 'violet',
+                    progressColor: 'purple',
+                    height: 128,
+                    plugins: [
+                        WaveSurfer.Hover.create({
+                            lineColor: '#ff0000',
+                            lineWidth: 2,
+                            labelBackground: '#555',
+                            labelColor: '#fff',
+                            labelSize: '11px',
+                        })
+                    ]
+                });
+
+                // Load the audio data into WaveSurfer
+                wavesurfer.load(audioUrl);
+            };
+
+            reader.readAsDataURL(file);
+            $("#spectogram").unblock();
+            $('#uploadBody').css('display', 'none');
+            $('#spectogramContainer').css('display', 'block');
+        } else {
+            alert("Please upload an audio file first.");
+        }
+    });
+    $("#discardButton").on('click', function() {
+        var confirmed = confirm('Do you want to discard progress?');
+
+        if (confirmed) {
+            $('#spectogramContainer').css('display', 'none');
+            $('#uploadBody').css('display', 'block');
+        }
+    })
 </script>
 
 </html>

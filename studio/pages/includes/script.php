@@ -17,6 +17,7 @@
 <script src="assets/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
 <script src="assets/vendor/libs/select2/select2.js"></script>
 <script src="assets/vendor/libs/jquery/jquery.js"></script>
+<script src="assets/vendor/libs/block-ui/block-ui.js"></script>
 
 <script src="assets/js/main.js"></script>
 
