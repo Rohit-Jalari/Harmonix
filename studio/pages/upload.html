@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/vendor/libs/dropzone/dropzone.css" />
+    <title>Dropzone Audio Upload</title>
+    <style>
+        #dropzone-basic {
+            border: 2px dashed #007bff;
+            padding: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="process/process.php" method="post" class="dropzone" id="dropzone-basic">
+        <div class="dz-message needsclick">
+            Drop audio files here or click to upload
+            <span class="note needsclick">(Files will not be automatically uploaded.)</span>
+        </div>
+    </form>
+    <button type="button" id="submitBtn">Add Audio Player</button>
+    <div id="audioContainer"></div>
+
+    <script src="assets/vendor/libs/dropzone/dropzone.js"></script>
+    <script>
+        Dropzone.options.dropzoneBasic = {
+            autoProcessQueue: false, // Prevent automatic uploads
+            maxFiles: 1, // Allow only one file
+            acceptedFiles: 'audio/*',
+            addRemoveLinks: true, // Allow file removal
+            init: function () {
+                var myDropzone = this;
+
+                // Listen for the 'addedfile' event to store the uploaded file information
+                myDropzone.on("addedfile", function (file) {
+                    // Store the file in the Dropzone instance for later processing
+                    myDropzone.files.push(file);
+                });
+
+                // Add an event listener to the button to create the audio player
+                document.getElementById("submitBtn").addEventListener("click", function () {
+                    if (myDropzone.files.length > 0) {
+                        // Assume the first file is the one we want to process
+                        var file = myDropzone.files[0];
+                        var reader = new FileReader();
+
+                        reader.onload = function (event) {
+                            var audioUrl = event.target.result;
+                            var audioContainer = document.getElementById("audioContainer");
+                            var audioElement = document.createElement("audio");
+                            audioElement.controls = true;
+                            audioElement.src = audioUrl;
+                            audioContainer.appendChild(audioElement);
+                        };
+
+                        reader.readAsDataURL(file);
+                    } else {
+                        alert("Please upload an audio file first.");
+                    }
+                });
+            }
+        };
+    </script>
+</body>
+
+</html>

@@ -19,9 +19,6 @@
 <script src="assets/vendor/libs/jquery/jquery.js"></script>
 
 <script src="assets/js/main.js"></script>
-<script src="assets/vendor/libs/dropzone/dropzone.js"></script>
-
-<script src="assets/js/forms-file-upload.js"></script>
 
 <script>
 	window.onscroll = function() {

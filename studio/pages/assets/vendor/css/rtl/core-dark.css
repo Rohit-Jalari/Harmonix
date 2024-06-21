@@ -46,7 +46,7 @@
   --bs-body-font-weight: 400;
   --bs-body-line-height: 1.53;
   --bs-body-color: #a3a4cc;
-  --bs-body-bg: #232333;
+  --bs-body-bg: black;
   --bs-border-width: 1px;
   --bs-border-style: solid;
   --bs-border-color: #444564;
@@ -4272,7 +4272,7 @@ fieldset:disabled .btn {
   --bs-card-cap-color: ;
   --bs-card-height: ;
   --bs-card-color: ;
-  --bs-card-bg: #2b2c40;
+  --bs-card-bg: #312d2d;
   --bs-card-img-overlay-padding: 1.5rem;
   --bs-card-group-margin: 0.8125rem;
   position: relative;
@@ -4284,7 +4284,8 @@ fieldset:disabled .btn {
   background-color: var(--bs-card-bg);
   background-clip: border-box;
   border: var(--bs-card-border-width) solid var(--bs-card-border-color);
-  border-radius: var(--bs-card-border-radius)
+  border-radius: var(--bs-card-border-radius);
+  padding: 1rem;
 }
 
 .card>hr {

@@ -54,6 +54,9 @@
             <!-- Layout page Start -->
 
             <div class="layout-page" style="height: 150vh">
+                <!-- nav bar start -->
+                <?php include('includes/navbar.php') ?>
+                <!-- nav bar end -->
 
                 <!-- Content wrapper -->
                 <div class="content-wrapper">

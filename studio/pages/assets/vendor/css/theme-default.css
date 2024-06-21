@@ -2,7 +2,7 @@
 .layout-navbar-fixed .layout-wrapper:not(.layout-horizontal) .layout-page:before {
   content: "";
   width: 100%;
-  height: 0.75rem;
+  height: 0.5rem;
   position: fixed;
   top: 0px;
   z-index: 10;
@@ -633,7 +633,7 @@ a:hover {
 }
 
 .layout-navbar {
-  background-color: rgba(43,44,64,.96) !important;
+  background-color: #3d3838 !important;
   -webkit-backdrop-filter: saturate(200%) blur(6px);
           backdrop-filter: saturate(200%) blur(6px);
 }

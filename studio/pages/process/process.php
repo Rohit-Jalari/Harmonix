@@ -38,6 +38,8 @@ function processAudio($audioFilePath) {
 }
 
 if(isset($_FILES['audioFile'])) {
+    echo json_encode(array('result' => 'working'));
+    return;
     // Directory where uploaded files will be saved
     $target_dir = "../../uploads/";
 

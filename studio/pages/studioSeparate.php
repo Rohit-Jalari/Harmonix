@@ -8,7 +8,65 @@
 <head>
     <?php include('includes/head.php'); ?>
     <link rel="stylesheet" href="assets/vendor/css/rtl/core-dark.css">
-    <link rel="stylesheet" href="assets/vendor/libs/dropzone/dropzone.css" />
+    <link rel="stylesheet" href="assets/vendor/libs/dropzone/dropzone.css">
+
+
+    <script src="assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="../dist/bundle.js" type="module"></script>
+    <script>
+        $(document).ready(function() {
+            // process button is enabled after uploading file
+            $('#file').change(function() {
+                var fileSelected = $(this).val() !== "";
+                $('#submitBtn').prop('disabled', !fileSelected);
+            });
+
+            $('form').submit(function(event) {
+                event.preventDefault();
+
+                var formData = new FormData($(this)[0]);
+                $("#file").val(""); // Clear file input after submission
+                $('#submitBtn').prop('disabled', true) // disables process button after clicking it
+                $("#audioPlayer").empty(); // Clear audio player div
+                console.log(formData);
+                $.ajax({
+                    url: 'process/process.php',
+                    type: 'POST',
+                    data: formData,
+                    async: true,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        // var data = JSON.parse(response);
+                        // var outputPath = '../' + JSON.parse(data).outputPath;
+                        // var audioID = JSON.parse(data).audioID;
+                        console.log(response);
+                        // console.log('File Path = ' + outputPath);
+                        // console.log('Audio ID = ' + audioID);
+                        // let div = $(`<div id="audioID">${audioID}</div>`);
+                        // $('#audioPlayer').append(div);
+                        // // Create the audio element
+                        // var audioPlayer = $('<audio controls></audio>');
+                        // // Set the source as 'outputPath' of the audio element
+                        // audioPlayer.attr('src', outputPath);
+                        // // Append the audio player to the div with id 'audioPlayer'
+                        // $('#audioPlayer').append(audioPlayer);
+                    },
+                    error: function() {
+                        alert('Error processing file.');
+                    }
+                });
+            });
+        });
+    </script>
+    <style>
+        #dropzone-basic {
+            border: 2px dashed #9ca8b6;
+            padding: 20px;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 
 <body>
@@ -54,24 +112,38 @@
 
             <!-- Layout page Start -->
             <div class="layout-page" style="height: 150vh">
+                <!-- nav bar start -->
+                <?php include('includes/navbar.php') ?>
+                <!-- nav bar end -->
 
                 <!-- Content wrapper -->
                 <div class="content-wrapper">
                     <div class="container-xxl flex-grow-1 container-p-y">
-                        <div>
-                            Separate Vocals
+
+                        <div class="row d-flex justify-content-center aligh-items-center">
+                            <div class="col-10">
+                                <div class="card">
+                                    <div>
+                                        Separate Vocals
+                                    </div>
+                                    <form action="process/process.php" method="post" class="dropzone" id="dropzone-basic">
+                                        <div class="dz-message needsclick">
+                                            Drop audio files here or click to upload
+                                        </div>
+                                    </form>
+                                    <button type="button" id="submitBtn">Add Audio Player</button>
+                                    <!-- Container for Wavesurfer -->
+                                    <div id="waveform" style="width: 100%; height: 200px; display: none;"></div>
+                                    <div id="audioPlayer"></div>
+
+                                </div>
+
+                            </div>
                         </div>
+
+
+
                         <h1>Upload Audio File</h1>
-                        <form action="" class="dropzone needsclick" id="dropzone-basic">
-                            <div class="dz-message needsclick">
-                                Drop files here or click to upload
-                                <span class="note needsclick">(This is just a demo dropzone. Selected files are <span class="fw-medium">not</span> actually uploaded.)</span>
-                            </div>
-                            <div class="fallback">
-                                <input name="file" type="file" name="audioFile" accept=".wav, .mp3" id="file" />
-                            </div>
-                            <!-- <button type="submit" name="submit" id="submitBtn" disabled>Process</button> -->
-                        </form>
                         <!-- Old Upload Form -->
                         <!-- <form id="uploadForm" action="" method="post" enctype="multipart/form-data">
                             <input type="file" name="audioFile" accept=".wav, .mp3" id="file">
@@ -84,9 +156,7 @@
                                 <button id="trimButton">Trim to 30 seconds</button>
                                 <button id="submitButton" style="display: none;">Submit</button>
                             </div>
-                            <!-- Container for Wavesurfer -->
-                            <div id="waveform" style="width: 100%; height: 200px; display: none;"></div>
-                            <div id="audioPlayer"></div>
+
                         </div>
 
                     </div>
@@ -99,15 +169,45 @@
     </div>
 </body>
 <?php include('includes/script.php') ?>
+<script src="assets/vendor/libs/dropzone/dropzone.js"></script>
 <script>
-// for handling drop-upload
-    const myDropzone = new Dropzone('#dropzone-basic', {
-        previewTemplate: previewTemplate,
-        parallelUploads: 1,
-        maxFilesize: 5,
-        addRemoveLinks: true,
-        maxFiles: 1
-    });
+    Dropzone.options.dropzoneBasic = {
+        autoProcessQueue: false, // Prevent automatic uploads
+        maxFiles: 1, // Allow only one file
+        acceptedFiles: 'audio/*',
+        addRemoveLinks: true, // Allow file removal
+        init: function() {
+            var myDropzone = this;
+
+            // Listen for the 'addedfile' event to store the uploaded file information
+            myDropzone.on("addedfile", function(file) {
+                // Store the file in the Dropzone instance for later processing
+                myDropzone.files.push(file);
+            });
+
+            // Add an event listener to the button to create the audio player
+            document.getElementById("submitBtn").addEventListener("click", function() {
+                if (myDropzone.files.length > 0) {
+                    // Assume the first file is the one we want to process
+                    var file = myDropzone.files[0];
+                    var reader = new FileReader();
+
+                    reader.onload = function(event) {
+                        var audioUrl = event.target.result;
+                        var audioContainer = document.getElementById("audioContainer");
+                        var audioElement = document.createElement("audio");
+                        audioElement.controls = true;
+                        audioElement.src = audioUrl;
+                        audioContainer.appendChild(audioElement);
+                    };
+
+                    reader.readAsDataURL(file);
+                } else {
+                    alert("Please upload an audio file first.");
+                }
+            });
+        }
+    };
 </script>
 
 </html>

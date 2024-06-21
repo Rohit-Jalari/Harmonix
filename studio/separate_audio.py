@@ -10,6 +10,7 @@ app = Flask(__name__)
 def separate_audio():
     if 'audio_file' not in request.files:
         return jsonify({'error': 'No audio file uploaded'}), 400
+    return jsonify({'status': 1 })
 
     audio_file = request.files['audio_file']
     try:
@@ -21,7 +22,7 @@ def separate_audio():
         file_extension = os.path.splitext(filename)[1].replace('.','')
 
         # Separate the audio file        
-        separator.separate_to_file(filename, 'outputs', codec=file_extension)
+        # separator.separate_to_file(filename, 'outputs', codec=file_extension)
 
         # Create a directory based on the filename without extension
         directory_name = os.path.splitext(os.path.basename(filename))[0]        

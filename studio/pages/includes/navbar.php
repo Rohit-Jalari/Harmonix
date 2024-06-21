@@ -1,7 +1,7 @@
-<nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center  bg-navbar-theme" id="layout-navbar" style="position: sticky;box-shadow: white;box-shadow: 0px 10px 0px 0px #232333,0px -10px 0px 0px #232333;" >
+<nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center  bg-navbar-theme" id="layout-navbar" style="position: sticky;box-shadow: white;" >
 	<div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
 		<a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
-			<i class="bx bx-menu bx-sm"></i>
+			<i class="bx bx-menu bx-sm" style="color:#9ca8b6"></i>
 		</a>
 	</div>
 
@@ -9,17 +9,7 @@
 
 		<ul class="navbar-nav flex-row align-items-center ms-auto">
 			<!-- Place this tag where you want the button to render. -->
-			<li class="nav-item me-3 d-none d-sm-block">
-				<div class="btn-group" role="group">
-					<?php if(!$loggedIn) { ?>
-					<a class="nav-link me-1" href="../pages/login.php"><i class="tf-icons navbar-icon bx bx-user"></i>Login</a>
-					<a class="nav-link me-1" href="../pages/register.php"><i class="tf-icons navbar-icon bx bx-user-plus me-1" style="font-size: 1.5rem;"></i>Register</a>
-					<?php }
-					if($loggedIn) {?>
-					<a class="nav-link me-1" href="../pages/logout.php"><i class="tf-icons navbar-icon bx bx-lock-open-alt"></i> Logout</a>
-					<?php } ?>
-				</div>
-			</li>
+			
 
 			<!-- User -->
 			<li class="nav-item navbar-dropdown dropdown-user dropdown">
