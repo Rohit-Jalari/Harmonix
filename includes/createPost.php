@@ -4,7 +4,11 @@
             <h3 class="news-feed-title">Create New Post</h3>
         </div>
         <div class="col-7 news-feed-title">
-            <button onclick="window.location.href = '../studio/pages/studioSeparate.php';"><i class="flaticon-tag"></i> Sing Now</button>
+            <ul class="button-group d-flex justify-content-between align-items-center">
+                <li class="tag-btn" style="list-style:none;">
+                    <button class="btn btn-warning" style="color:#2a2323;font-size:1.1rem;font-weight:bold;" onclick="window.location.href = '../studio/pages/studioSeparate.php';"><i class="flaticon-tag"></i> Studio</button>
+                </li>
+            </ul>
         </div>
     </div>
 
@@ -18,9 +22,6 @@
             </li>
             <li class="video-btn">
                 <button type="submit"><i class="flaticon-video"></i> Video</button>
-            </li>
-            <li class="tag-btn">
-                <button type="submit"><i class="flaticon-tag"></i> Sing</button>
             </li>
             <li class="post-btn">
                 <button type="submit">Post</button>

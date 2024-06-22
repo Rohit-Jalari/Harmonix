@@ -164,6 +164,7 @@
             myDropzone.removeFile(myDropzone.files[0]);
         }
         $('#spectogramContainer').css('display', 'none');
+
     });
 
     // Listen for the 'removedfile' event to clear the spectogram container
@@ -243,6 +244,14 @@
                 // Wait for audio metadata to be loaded to get duration
                 audio.addEventListener('loadedmetadata', function() {
                     var duration = audio.duration; // Get audio duration in seconds
+                    if (duration > 61) {
+                        alert("Error : File duration must be less than 60 seconds\nUploaded File duration = " + duration + " seconds");
+                        myDropzone.removeFile(myDropzone.files[0]);
+                        $('#spectogramContainer').css('display', 'none');
+                        $('#uploadBody').css('display', 'block');
+                        $('#separateBtn').prop('disabled', false) // disables process button after clicking it
+
+                    }
 
                     var plugins = [
                         WaveSurfer.Hover.create({
