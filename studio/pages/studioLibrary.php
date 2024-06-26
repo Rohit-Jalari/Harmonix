@@ -62,89 +62,89 @@
                     <div class="container-xxl flex-grow-1 container-p-y">
                         <div class="row">
                             <div class="col-12">
-                                    <div class="nav-align-top">
-                                        <ul class="nav nav-pills mb-3" role="tablist">
-                                            <li class="nav-item">
-                                                <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-top-home" aria-controls="navs-top-home" aria-selected="true">Records</button>
-                                            </li>
-                                            <li class="nav-item">
-                                                <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-top-profile" aria-controls="navs-top-profile" aria-selected="false">Saved Tracks</button>
-                                            </li>
+                                <div class="nav-align-top">
+                                    <ul class="nav nav-pills mb-3" role="tablist">
+                                        <li class="nav-item">
+                                            <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-top-home" aria-controls="navs-top-home" aria-selected="true">Records</button>
+                                        </li>
+                                        <li class="nav-item">
+                                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-top-profile" aria-controls="navs-top-profile" aria-selected="false">Saved Tracks</button>
+                                        </li>
 
-                                        </ul>
-                                        <div class="tab-content">
-                                            <div class="tab-pane fade show active" id="navs-top-home" role="tabpanel">
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Date</th>
-                                                            <th>Track</th>
-                                                            <th>Actions</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <span class="fw-medium">Angular Project</span></td>
-                                                            <td>Albert Cook</td>
-                                                            <td>
-                                                                <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                                                                    <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" title="Lilian Fuller">
-                                                                        <img src="assets/img/avatars/5.png" alt="Avatar" class="rounded-circle">
-                                                                    </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="navs-top-home" role="tabpanel">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Date</th>
+                                                        <th>Track</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <span class="fw-medium">Angular Project</span></td>
+                                                        <td>Albert Cook</td>
+                                                        <td>
+                                                            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
+                                                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" title="Lilian Fuller">
+                                                                    <img src="assets/img/avatars/5.png" alt="Avatar" class="rounded-circle">
+                                                                </li>
 
-                                                                </ul>
-                                                            </td>
+                                                            </ul>
+                                                        </td>
 
-                                                            <td>
-                                                                <div class="dropdown">
-                                                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
-                                                                    <div class="dropdown-menu">
-                                                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i>Edit</a>
-                                                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>Delete</a>
-                                                                    </div>
+                                                        <td>
+                                                            <div class="dropdown">
+                                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i>Edit</a>
+                                                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>Delete</a>
                                                                 </div>
-                                                            </td>
-                                                        </tr>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
 
-                                                    </tbody>
-                                                </table>
+                                                </tbody>
+                                            </table>
 
-                                            </div>
-                                            <div class="tab-pane fade" id="navs-top-profile" role="tabpanel">
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Date</th>
-                                                            <th>Actions</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <span class="fw-medium">Angular Project</span></td>
-                                                            <td>Albert Cook</td>
-
-
-                                                            <td>
-                                                                <div class="dropdown">
-                                                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
-                                                                    <div class="dropdown-menu">
-                                                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i>Edit</a>
-                                                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>Delete</a>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <audio class="w-100" id="plyr-audio-player" controls>
-                                                <source src="./assets/audio/Water_Lily.mp3" type="audio/mp3" />
-                                            </audio>
                                         </div>
+                                        <div class="tab-pane fade" id="navs-top-profile" role="tabpanel">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Date</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <span class="fw-medium">Angular Project</span></td>
+                                                        <td>Albert Cook</td>
+
+
+                                                        <td>
+                                                            <div class="dropdown">
+                                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i>Edit</a>
+                                                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>Delete</a>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <audio class="w-100" id="plyr-audio-player" controls>
+                                            <source src="./assets/audio/Water_Lily.mp3" type="audio/mp3" />
+                                        </audio>
                                     </div>
+                                </div>
                             </div>
                         </div>
                     </div>

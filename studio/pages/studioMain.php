@@ -132,7 +132,7 @@
 <script src="assets/vendor/libs/wavesurfer/plugins/hover.min.js"></script>
 <script src="assets/vendor/libs/wavesurfer/plugins/regions.min.js"></script>
 <script>
-    var wavesurfer;
+    var wavesurfer, uploadAudiURL;
     // Disable Dropzone auto-discovery
     Dropzone.autoDiscover = false;
 
@@ -177,9 +177,9 @@
     // Add an event listener to the button to create the spectogram
     // document.getElementById("submitButton").addEventListener("click", function() {
     $("#submitButton").on("click", function() {
-        console.log('start');
+        // console.log('start');
         blockUI('#spectogram', 'Please Wait.....')
-        console.log('end');
+        // console.log('end');
 
         if (myDropzone.files.length > 0) {
             // Assume the first file is the one we want to process
@@ -197,7 +197,6 @@
                     waveColor: 'violet',
                     progressColor: 'purple',
                     height: 128,
-                    mediaControls: true,
                     autoplay: false,
                     plugins: [
                         WaveSurfer.Hover.create({
@@ -264,6 +263,18 @@
                         })
                     ];
                     wavesurfer.load(audioUrl);
+                    uploadAudiURL = audioURL;
+                    $('#record').on('click', function() {
+                        let recordStatus = document.getElementById('record').innerHTML;
+                        console.log(recordStatus);
+                        // if($(this).text() == 'Record') {
+                        //     console.log('Record');
+                        //     wavesurfer.playPause();
+                        // } else if($(this).text() == 'Stop'){
+                        //     console.log('Stop');
+                        // }
+                        // wavesurfer.playPause();
+                    });
                 });
             };
 

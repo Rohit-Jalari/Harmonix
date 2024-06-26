@@ -31,6 +31,15 @@
             padding: 20px;
             border-radius: 5px;
         }
+
+        /* CSS for individual sliders */
+        .slider {
+            writing-mode: vertical-lr;
+            /* Vertical orientation */
+            direction: rtl;
+            /* Right-to-left direction for vertical slider */
+            margin: 10px;
+        }
     </style>
 </head>
 
@@ -97,7 +106,7 @@
                                         </div>
                                     </form>
                                     <div class="d-flex justify-content-center mt-3">
-                                        <button class="primary" id="submitButton">Process</button>
+                                        <button class="primary" id="submitButton" disabled>Process</button>
                                     </div>
                                 </div>
                                 <div class="card" id="spectogramContainer" style="display: none;">
@@ -109,9 +118,65 @@
 
                                     </div>
                                     <div class="d-flex justify-content-center align-item-center" style="width: 100%;">
-                                        <button id="separateBtn">
+                                        <button id="separateButton">
                                             Separate
                                         </button>
+                                    </div>
+                                </div>
+                                <div class="card" id="effects" style="display: none;">
+                                    <div class="nav-align-top">
+                                        <ul class="nav nav-pills mb-3" role="tablist">
+                                            <li class="nav-item">
+                                                <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#equalizer" aria-controls="equalizer" aria-selected="true">Equalizer</button>
+                                            </li>
+                                            <li class="nav-item">
+                                                <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#reverb" aria-controls="reverb" aria-selected="false">Reverb</button>
+                                            </li>
+
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane fade show active" id="equalizer" role="tabpanel">
+                                                <label class="switch switch-square switch-success">
+                                                    <input type="checkbox" class="switch-input" id="equalizerSwitch" />
+                                                    <span class="switch-toggle-slider">
+                                                        <span class="switch-on">
+                                                            <i class="bx bx-check"></i>
+                                                        </span>
+                                                        <span class="switch-off">
+                                                            <i class="bx bx-x"></i>
+                                                        </span>
+                                                    </span>
+                                                    <span class="switch-label">Off</span>
+                                                </label>
+                                                <div class="equalizer-container d-flex align-items-center">
+                                                    <label>Equalizer Sliders:</label>
+                                                    <input type="range" class="slider" id="slider1" min="-40" max="40" step="0.1" value="0" disabled>
+                                                    <input type="range" class="slider" id="slider2" min="-40" max="40" step="0.1" value="0" disabled>
+                                                    <input type="range" class="slider" id="slider3" min="-40" max="40" step="0.1" value="0" disabled>
+                                                    <input type="range" class="slider" id="slider4" min="-40" max="40" step="0.1" value="0" disabled>
+                                                    <input type="range" class="slider" id="slider5" min="-40" max="40" step="0.1" value="0" disabled>
+                                                    <input type="range" class="slider" id="slider6" min="-40" max="40" step="0.1" value="0" disabled>
+                                                    <input type="range" class="slider" id="slider7" min="-40" max="40" step="0.1" value="0" disabled>
+                                                    <input type="range" class="slider" id="slider8" min="-40" max="40" step="0.1" value="0" disabled>
+                                                    <input type="range" class="slider" id="slider9" min="-40" max="40" step="0.1" value="0" disabled>
+                                                    <input type="range" class="slider" id="slider10" min="-40" max="40" step="0.1" value="0" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade show" id="reverb" role="tabpanel">
+                                                <label class="switch switch-square switch-success">
+                                                    <input type="checkbox" class="switch-input" />
+                                                    <span class="switch-toggle-slider">
+                                                        <span class="switch-on">
+                                                            <i class="bx bx-check"></i>
+                                                        </span>
+                                                        <span class="switch-off">
+                                                            <i class="bx bx-x"></i>
+                                                        </span>
+                                                    </span>
+                                                    <span class="switch-label">Off</span>
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -120,9 +185,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Overlay -->
-    <div class="layout-overlay layout-menu-toggle"></div>
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
     </div>
 </body>
 <?php include('includes/script.php') ?>
@@ -131,7 +195,7 @@
 <script src="assets/vendor/libs/wavesurfer/plugins/hover.min.js"></script>
 <script src="assets/vendor/libs/wavesurfer/plugins/regions.min.js"></script>
 <script>
-    var wavesurfer;
+    var wavesurfer, uploadedAudioURL;
     // Disable Dropzone auto-discovery
     Dropzone.autoDiscover = false;
 
@@ -164,7 +228,7 @@
             myDropzone.removeFile(myDropzone.files[0]);
         }
         $('#spectogramContainer').css('display', 'none');
-
+        $('#submitButton').prop('disabled', false);
     });
 
     // Listen for the 'removedfile' event to clear the spectogram container
@@ -244,13 +308,12 @@
                 // Wait for audio metadata to be loaded to get duration
                 audio.addEventListener('loadedmetadata', function() {
                     var duration = audio.duration; // Get audio duration in seconds
-                    if (duration > 61) {
-                        alert("Error : File duration must be less than 60 seconds\nUploaded File duration = " + duration + " seconds");
+                    if (duration >120) {
+                        alert("Error : File duration must be less than 120 seconds\nUploaded File duration = " + duration + " seconds");
                         myDropzone.removeFile(myDropzone.files[0]);
                         $('#spectogramContainer').css('display', 'none');
                         $('#uploadBody').css('display', 'block');
-                        $('#separateBtn').prop('disabled', false) // disables process button after clicking it
-
+                        $('#separateButton').prop('disabled', false) // disables process button after clicking it
                     }
 
                     var plugins = [
@@ -270,6 +333,7 @@
             $("#spectogram").unblock();
             $('#uploadBody').css('display', 'none');
             $('#spectogramContainer').css('display', 'block');
+            $('#separateButton').text('Separate');
         } else {
             alert("Please upload an audio file first.");
         }
@@ -280,49 +344,77 @@
         if (confirmed) {
             myDropzone.removeFile(myDropzone.files[0]);
             $('#spectogramContainer').css('display', 'none');
+            $('#equalizer').css('display', 'none');
             $('#uploadBody').css('display', 'block');
-            $('#separateBtn').prop('disabled', false) // disables process button after clicking it
+            $('#separateButton').prop('disabled', false) // disables process button after clicking it
+            $('#submitButton').prop('disabled', true);
         }
     });
-    $('#separateBtn').on('click', function() {
-
-        if (wavesurfer.isPlaying()) {
-            wavesurfer.pause();
-        }
-        blockUI('#spectogram', 'Separating Vocal.....');
-        // var formData = new FormData(myDropzone.files[0]);
-
-        var file = myDropzone.files[0];
-        var formData = new FormData();
-
-        formData.append('audioFile', file);
-
-        $('#separateBtn').prop('disabled', true) // disables process button after clicking it
-        console.log(formData);
-        $.ajax({
-            url: 'process/process.php',
-            type: 'POST',
-            data: formData,
-            async: true,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                console.log(response);
-                var data = JSON.parse(response).result;
-                var outputPath = '../' + JSON.parse(data).outputPath;
-                var audioID = JSON.parse(data).audioID;
-                console.log('File Path = ' + outputPath);
-                console.log('Audio ID = ' + audioID);
-                wavesurfer.empty();
-                wavesurfer.load(outputPath);
-                $('#spectogram').unblock();
-            },
-            error: function() {
-                alert('Error processing file.');
+    $('#separateButton').on('click', function() {
+        // Capture start time
+        var startTime = new Date().getTime();
+        // console.log($('#separateButton').text());
+        if ($('#separateButton').text().trim() == 'Separate') {
+            console.log('Separated');
+            if (wavesurfer.isPlaying()) {
+                wavesurfer.pause();
             }
-        });
-    })
+            blockUI('#spectogram', 'Separating Vocal.....');
+            // var formData = new FormData(myDropzone.files[0]);
+
+            var file = myDropzone.files[0];
+            var formData = new FormData();
+
+            formData.append('audioFile', file);
+
+            $('#separateButton').text('Save'); // disables process button after clicking it
+            console.log(formData);
+            $.ajax({
+                url: 'process/process.php',
+                type: 'POST',
+                data: formData,
+                async: true,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response);
+                    var data = JSON.parse(response).result;
+                    var outputPath = '../' + JSON.parse(data).outputPath;
+                    var audioID = JSON.parse(data).audioID;
+                    console.log('File Path = ' + outputPath);
+                    console.log('Audio ID = ' + audioID);
+                    wavesurfer.empty();
+                    // outputPath = '../uploads/Trimmed-Tu jaane na.mp3';
+                    uploadedAudioURL = outputPath;
+                    wavesurfer.load(outputPath);
+                    $('#spectogram').unblock();
+                    loadequalizer();
+                    // Capture completion time
+                    var completionTime = new Date().getTime();
+
+                    // Calculate elapsed time in milliseconds
+                    var elapsedTimeMs = completionTime - startTime;
+
+                    // Convert elapsed time to seconds
+                    var elapsedTimeSec = elapsedTimeMs / 1000; // convert milliseconds to seconds
+
+                    // Log or use elapsedTimeSec as needed
+                    console.log('AJAX request took ' + elapsedTimeSec.toFixed(2) + ' seconds to complete.');
+                },
+                error: function() {
+                    alert('Error processing file.');
+                }
+            });
+        } else if ($('#separateButton').text().trim() == 'Save') {
+            console.log("Saved");
+        }
+    });
+
+    function loadequalizer() {
+        $('#effects').css('display', 'block');
+    }
 </script>
+<script type="module" data-type="module" src="scripts/effectEqualizer.js"></script>
 
 </html>

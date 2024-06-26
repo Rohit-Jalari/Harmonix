@@ -3,31 +3,29 @@
 import WaveSurfer from '../assets/vendor/libs/wavesurfer/wavesurfer.esm.js'
 import RecordPlugin from '../assets/vendor/libs/wavesurfer/plugins/record.esm.js'
 
-let wavesurfer, record
+let micWavesurfer, record
 let scrollingWaveform = true
-let spectogram = document.getElementById('#spectogram');
-let spectogramAudio = spectogram.querySelector('audio');
 
 const createWaveSurfer = () => {
     // Create an instance of WaveSurfer
-    if (wavesurfer) {
-        wavesurfer.destroy()
+    if (micWavesurfer) {
+        micWavesurfer.destroy()
     }
-    wavesurfer = WaveSurfer.create({
+    micWavesurfer = WaveSurfer.create({
         container: '#mic',
         waveColor: 'rgb(200, 0, 200)',
         progressColor: 'rgb(100, 0, 100)',
     })
 
     // Initialize the Record plugin
-    record = wavesurfer.registerPlugin(RecordPlugin.create({ scrollingWaveform, renderRecordedAudio: false }))
+    record = micWavesurfer.registerPlugin(RecordPlugin.create({ scrollingWaveform, renderRecordedAudio: false }))
     // Render recorded audio
     record.on('record-end', (blob) => {
         const container = document.querySelector('#recordings')
         const recordedUrl = URL.createObjectURL(blob)
 
         // Create wavesurfer from the recorded audio
-        const wavesurfer = WaveSurfer.create({
+        const resultWavesurfer = WaveSurfer.create({
             container,
             waveColor: 'rgb(200, 100, 0)',
             progressColor: 'rgb(100, 50, 0)',
@@ -37,9 +35,9 @@ const createWaveSurfer = () => {
         // Play button
         const button = container.appendChild(document.createElement('button'))
         button.textContent = 'Play'
-        button.onclick = () => wavesurfer.playPause()
-        wavesurfer.on('pause', () => (button.textContent = 'Play'))
-        wavesurfer.on('play', () => (button.textContent = 'Pause'))
+        button.onclick = () => resultWavesurfer.playPause()
+        resultWavesurfer.on('pause', () => (button.textContent = 'Play'))
+        resultWavesurfer.on('play', () => (button.textContent = 'Pause'))
 
         // Download link
         const link = container.appendChild(document.createElement('a'))
@@ -73,12 +71,14 @@ const pauseButton = document.querySelector('#pause')
 pauseButton.onclick = () => {
     if (record.isPaused()) {
         record.resumeRecording()
+        wavesurfer.play()
         pauseButton.textContent = 'Pause'
         return
     }
 
     record.pauseRecording()
-    spectogramAudio.pause()
+    wavesurfer.pause()
+    // spectogramAudio.pause()
     pauseButton.textContent = 'Resume'
 }
 
@@ -100,20 +100,22 @@ const recButton = document.querySelector('#record')
 recButton.onclick = () => {
     if (record.isRecording() || record.isPaused()) {
         record.stopRecording()
-        spectogramAudio.pause()
+        // spectogramAudio.pause()
+        wavesurfer.stop()
         recButton.textContent = 'Record'
         pauseButton.style.display = 'none'
         return
     }
 
     recButton.disabled = true
+    // console.log(check);
 
     // reset the wavesurfer instance
 
     // get selected device
     const deviceId = micSelect.value
     record.startRecording({ deviceId }).then(() => {    
-        spectogramAudio.play() 
+        wavesurfer.play() 
         recButton.textContent = 'Stop'
         recButton.disabled = false
         pauseButton.style.display = 'inline'

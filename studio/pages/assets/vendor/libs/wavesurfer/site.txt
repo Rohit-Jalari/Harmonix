@@ -1,0 +1,1 @@
+https://cdn.jsdelivr.net/npm/wavesurfer.js@7/dist/plugins/hover.esm.js

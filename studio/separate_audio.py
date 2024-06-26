@@ -2,12 +2,16 @@
 from flask import Flask, request, jsonify
 from spleeter.separator import Separator
 from werkzeug.utils import secure_filename
+import tensorflow as tf
 import os
 
 app = Flask(__name__)
 
 @app.route('/separate_audio', methods=['POST'])
 def separate_audio():
+
+    tf.compat.v1.reset_default_graph()  # Reset TensorFlow default graph
+
     if 'audio_file' not in request.files:
         return jsonify({'error': 'No audio file uploaded'}), 400
     # return jsonify({'status': 1 })

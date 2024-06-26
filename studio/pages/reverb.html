@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waveform with Reverb</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        #waveform { 
+            width: 100%; 
+            height: 200px; 
+        }
+        #controls {
+            margin-top: 20px;
+        }
+        #reverb-slider {
+            width: 300px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="waveform"></div>
+    <div id="controls">
+        <button id="play-button">Play</button>
+        <button id="stop-button">Stop</button>
+        <div>
+            <label for="reverb-slider">Reverb:</label>
+            <div id="reverb-slider"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/6.6.3/wavesurfer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        // Initialize WaveSurfer
+        const wavesurfer = WaveSurfer.create({
+            container: '#waveform',
+            waveColor: 'violet',
+            progressColor: 'purple'
+        });
+
+        // Initialize Tone.js and reverb effect
+        let reverbEffect;
+
+        // Function to initialize Tone.js and reverb effect
+        function initializeAudio() {
+            Tone.start(); // Attempt to start Tone.js AudioContext
+
+            reverbEffect = new Tone.Reverb().toDestination();
+
+            // Connect the waveform to the reverb effect
+            wavesurfer.on('ready', function() {
+                wavesurfer.backend.setFilter(reverbEffect);
+            });
+
+            // Initialize the slider
+            $("#reverb-slider").slider({
+                min: 0,
+                max: 1,
+                step: 0.01,
+                value: 0,
+                slide: function(event, ui) {
+                    updateReverb(ui.value);
+                }
+            });
+        }
+
+        // Play button functionality
+        $("#play-button").on("click", function() {
+            // Ensure audio initialization happens on first user interaction
+            if (!Tone.context.state === 'running') {
+                initializeAudio();
+            }
+            wavesurfer.play();
+        });
+
+        // Stop button functionality
+        $("#stop-button").on("click", function() {
+            wavesurfer.stop();
+        });
+
+        // Function to update reverb based on slider value
+        function updateReverb(value) {
+            reverbEffect.wet.value = value;
+        }
+    </script>
+</body>
+</html>

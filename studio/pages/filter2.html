@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waveform with Equalizer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/4.3.0/wavesurfer.css">
+    <style>
+        /* CSS for slider container */
+        .slider-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        /* CSS for individual sliders */
+        .slider {
+            writing-mode: vertical-lr; /* Vertical orientation */
+            direction: rtl; /* Right-to-left direction for vertical slider */
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="waveform"></div>
+
+    <!-- Sliders container -->
+    <div class="slider-container">
+        <label>Equalizer Sliders:</label>
+        <input type="range" class="slider" id="slider1" min="-40" max="40" step="0.1" value="0">
+        <input type="range" class="slider" id="slider2" min="-40" max="40" step="0.1" value="0">
+        <input type="range" class="slider" id="slider3" min="-40" max="40" step="0.1" value="0">
+        <input type="range" class="slider" id="slider4" min="-40" max="40" step="0.1" value="0">
+        <input type="range" class="slider" id="slider5" min="-40" max="40" step="0.1" value="0">
+        <input type="range" class="slider" id="slider6" min="-40" max="40" step="0.1" value="0">
+        <input type="range" class="slider" id="slider7" min="-40" max="40" step="0.1" value="0">
+        <input type="range" class="slider" id="slider8" min="-40" max="40" step="0.1" value="0">
+        <input type="range" class="slider" id="slider9" min="-40" max="40" step="0.1" value="0">
+        <input type="range" class="slider" id="slider10" min="-40" max="40" step="0.1" value="0">
+    </div>
+    <button id="startButton">
+        Click
+    </button>
+</body>
+<script type="module" data-type="module" src="scripts/effectEquilizer.js"></script>
+</html>
