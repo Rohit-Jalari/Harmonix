@@ -248,6 +248,7 @@
             // Assume the first file is the one we want to process
             var file = myDropzone.files[0];
             var reader = new FileReader();
+            console.log(file);
 
             reader.onload = function(event) {
                 var audioUrl = event.target.result;
@@ -308,7 +309,7 @@
                 // Wait for audio metadata to be loaded to get duration
                 audio.addEventListener('loadedmetadata', function() {
                     var duration = audio.duration; // Get audio duration in seconds
-                    if (duration >120) {
+                    if (duration >320) {
                         alert("Error : File duration must be less than 120 seconds\nUploaded File duration = " + duration + " seconds");
                         myDropzone.removeFile(myDropzone.files[0]);
                         $('#spectogramContainer').css('display', 'none');
