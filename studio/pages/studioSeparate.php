@@ -308,8 +308,8 @@
                 // Wait for audio metadata to be loaded to get duration
                 audio.addEventListener('loadedmetadata', function() {
                     var duration = audio.duration; // Get audio duration in seconds
-                    if (duration >120) {
-                        alert("Error : File duration must be less than 120 seconds\nUploaded File duration = " + duration + " seconds");
+                    if (duration >300) {
+                        alert("Error : File duration must be less than 300 seconds\nUploaded File duration = " + duration + " seconds");
                         myDropzone.removeFile(myDropzone.files[0]);
                         $('#spectogramContainer').css('display', 'none');
                         $('#uploadBody').css('display', 'block');
