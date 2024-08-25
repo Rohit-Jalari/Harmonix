@@ -3,7 +3,7 @@
 import WaveSurfer from '../assets/vendor/libs/wavesurfer/wavesurfer.esm.js'
 import RecordPlugin from '../assets/vendor/libs/wavesurfer/plugins/record.esm.js'
 
-let micWavesurfer, record
+let micWavesurfer, record, resultWavesurfer
 let scrollingWaveform = true
 
 const createWaveSurfer = () => {
@@ -25,7 +25,7 @@ const createWaveSurfer = () => {
         const recordedUrl = URL.createObjectURL(blob)
 
         // Create wavesurfer from the recorded audio
-        const resultWavesurfer = WaveSurfer.create({
+        resultWavesurfer = WaveSurfer.create({
             container,
             waveColor: 'rgb(200, 100, 0)',
             progressColor: 'rgb(100, 50, 0)',
@@ -122,3 +122,12 @@ recButton.onclick = () => {
     })
 }
 createWaveSurfer()
+
+// function merge() {
+//     const buffer1 = wavesurfer.backend.buffer;
+//     resultWavesurfer.on('ready', () => {
+//         const buffer2 = resultWavesurfer.backend.buffer;
+
+//         const audioContext = new (window.AudioContext)
+//     })
+// }

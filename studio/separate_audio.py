@@ -17,18 +17,19 @@ def separate_audio():
     # return jsonify({'status': 1 })
 
     audio_file = request.files['audio_file']
+    print(f"Incoming Request for audio : {audio_file.filename}")
     try:
-        # Initializing the separator with 2 stems (vocals and accompaniment)
+        # return
+        # 2 stems (vocals and accompaniment)
         separator = Separator('spleeter:2stems')
 
-        #filename in upload directory        
+        #filename in upload directory  
         filename = secure_filename(audio_file.filename).replace('uploads_audioID', 'uploads/audioID=')
         file_extension = os.path.splitext(filename)[1].replace('.','')
 
         # Separate the audio file        
         separator.separate_to_file(filename, 'outputs', codec=file_extension)
 
-        # Create a directory based on the filename without extension
         directory_name = os.path.splitext(os.path.basename(filename))[0]        
         target_dir = "outputs"
 
@@ -41,5 +42,5 @@ def separate_audio():
         return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
 

@@ -164,7 +164,7 @@
                                             </div>
                                             <div class="tab-pane fade show" id="reverb" role="tabpanel">
                                                 <label class="switch switch-square switch-success">
-                                                    <input type="checkbox" class="switch-input" />
+                                                    <input type="checkbox" class="switch-input" id="reverbSwitch" />
                                                     <span class="switch-toggle-slider">
                                                         <span class="switch-on">
                                                             <i class="bx bx-check"></i>
@@ -385,7 +385,7 @@
                     console.log('File Path = ' + outputPath);
                     console.log('Audio ID = ' + audioID);
                     wavesurfer.empty();
-                    // outputPath = '../outputs/audioID=667d9740a64550.31045716/accompaniment.mp3';
+                    // outputPath = '../outputs/audioID=66c4a48c63dfb8.11050042/vocals.mp3';
                     uploadedAudioURL = outputPath;
                     wavesurfer.load(outputPath);
                     $('#spectogram').unblock();
@@ -416,5 +416,7 @@
     }
 </script>
 <script type="module" data-type="module" src="scripts/effectEqualizer.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+<script type="module" data-type="module" src="scripts/effectReverb.js"></script>
 
 </html>
